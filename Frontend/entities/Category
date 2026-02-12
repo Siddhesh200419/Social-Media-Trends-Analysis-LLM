@@ -1,0 +1,41 @@
+{
+  "name": "Category",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Category name (e.g., Technology, Politics, Sports)"
+    },
+    "description": {
+      "type": "string",
+      "description": "Brief description of the category"
+    },
+    "icon": {
+      "type": "string",
+      "description": "Icon name for the category"
+    },
+    "relevance_score": {
+      "type": "number",
+      "description": "Calculated relevance score for ranking"
+    },
+    "topic_count": {
+      "type": "integer",
+      "description": "Number of trending topics in this category"
+    },
+    "total_tweets": {
+      "type": "integer",
+      "description": "Total tweets across all topics"
+    },
+    "avg_sentiment": {
+      "type": "number",
+      "description": "Average sentiment score (-2 to +2)"
+    },
+    "color": {
+      "type": "string",
+      "description": "Color theme for the category"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

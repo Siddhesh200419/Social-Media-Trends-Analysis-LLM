@@ -1,0 +1,81 @@
+{
+  "name": "Topic",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Topic name/hashtag"
+    },
+    "category_id": {
+      "type": "string",
+      "description": "Reference to parent category"
+    },
+    "description": {
+      "type": "string",
+      "description": "AI-generated topic summary"
+    },
+    "relevance_score": {
+      "type": "number",
+      "description": "Calculated relevance score"
+    },
+    "tweet_frequency": {
+      "type": "integer",
+      "description": "Number of tweets in time window"
+    },
+    "engagement_score": {
+      "type": "number",
+      "description": "Combined likes, retweets, replies score"
+    },
+    "total_likes": {
+      "type": "integer"
+    },
+    "total_retweets": {
+      "type": "integer"
+    },
+    "total_replies": {
+      "type": "integer"
+    },
+    "sentiment_distribution": {
+      "type": "object",
+      "description": "Distribution across 5 sentiment levels",
+      "properties": {
+        "extreme_negative": {
+          "type": "integer"
+        },
+        "negative": {
+          "type": "integer"
+        },
+        "neutral": {
+          "type": "integer"
+        },
+        "positive": {
+          "type": "integer"
+        },
+        "extreme_positive": {
+          "type": "integer"
+        }
+      }
+    },
+    "avg_sentiment": {
+      "type": "number",
+      "description": "Average sentiment (-2 to +2)"
+    },
+    "trend_duration": {
+      "type": "string",
+      "description": "Estimated relevance duration (e.g., '2-3 days')"
+    },
+    "peak_time": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the topic peaked"
+    },
+    "is_rising": {
+      "type": "boolean",
+      "description": "Whether trend is still rising"
+    }
+  },
+  "required": [
+    "name",
+    "category_id"
+  ]
+}

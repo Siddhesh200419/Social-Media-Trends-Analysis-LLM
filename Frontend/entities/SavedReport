@@ -1,0 +1,32 @@
+{
+  "name": "SavedReport",
+  "type": "object",
+  "properties": {
+    "topic_id": {
+      "type": "string",
+      "description": "Reference to the topic"
+    },
+    "topic_name": {
+      "type": "string"
+    },
+    "category_name": {
+      "type": "string"
+    },
+    "report_data": {
+      "type": "object",
+      "description": "Snapshot of trend data at time of save"
+    },
+    "ai_summary": {
+      "type": "string",
+      "description": "LLM-generated trend summary"
+    },
+    "saved_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "topic_id",
+    "topic_name"
+  ]
+}

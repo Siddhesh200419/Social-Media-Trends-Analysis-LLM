@@ -1,0 +1,61 @@
+{
+  "name": "Tweet",
+  "type": "object",
+  "properties": {
+    "topic_id": {
+      "type": "string",
+      "description": "Reference to parent topic"
+    },
+    "content": {
+      "type": "string",
+      "description": "Tweet text content"
+    },
+    "author_name": {
+      "type": "string"
+    },
+    "author_handle": {
+      "type": "string"
+    },
+    "author_avatar": {
+      "type": "string",
+      "description": "URL to author avatar"
+    },
+    "author_verified": {
+      "type": "boolean"
+    },
+    "likes": {
+      "type": "integer"
+    },
+    "retweets": {
+      "type": "integer"
+    },
+    "replies": {
+      "type": "integer"
+    },
+    "sentiment_score": {
+      "type": "integer",
+      "description": "Sentiment level: -2 to +2"
+    },
+    "sentiment_label": {
+      "type": "string",
+      "enum": [
+        "Extreme Negative",
+        "Negative",
+        "Neutral",
+        "Positive",
+        "Extreme Positive"
+      ]
+    },
+    "posted_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "engagement_score": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "topic_id",
+    "content"
+  ]
+}
