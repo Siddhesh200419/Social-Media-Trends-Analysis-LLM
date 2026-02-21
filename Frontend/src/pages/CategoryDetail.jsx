@@ -28,6 +28,8 @@ export default function CategoryDetail() {
   const { data, isLoading } = useQuery({
     queryKey: ['pipeline', selectedQuery],
     queryFn: () => fetchPipelineData(selectedQuery),
+    staleTime: 60000,
+    refetchOnWindowFocus: false,
   });
 
   const category = data?.categories.find(c => c.id === categoryId);

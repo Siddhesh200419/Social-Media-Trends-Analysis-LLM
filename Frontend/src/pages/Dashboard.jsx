@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { TrendingUp, Hash, MessageSquare, BarChart3, RefreshCw, Sparkles, Heart } from 'lucide-react';
@@ -26,10 +26,20 @@ export default function Dashboard() {
   const loadingTopics = isLoading;
 
   const totalTweets = categories.reduce((sum, cat) => sum + (cat.total_tweets || 0), 0);
-  const avgSentiment = categories.length > 0 
-    ? (categories.reduce((sum, cat) => sum + (cat.avg_sentiment || 0), 0) / categories.length).toFixed(2)
+  const avgSentimentRaw = categories.length > 0 
+    ? (categories.reduce((sum, cat) => sum + (cat.avg_sentiment || 0), 0) / categories.length)
     : 0;
+  const avgSentiment = avgSentimentRaw.toFixed(2);
   const risingTopics = topics.filter(t => t.is_rising).length;
+
+  const [prev, setPrev] = useState({ totalTweets: 0, avgSentiment: 0, topics: 0, rising: 0 });
+  useEffect(() => {
+    setPrev(p => ({ totalTweets: totalTweets, avgSentiment: avgSentimentRaw, topics: topics.length, rising: risingTopics }));
+  }, [totalTweets, avgSentimentRaw, topics.length, risingTopics]);
+
+  const deltaTweets = totalTweets - prev.totalTweets;
+  const deltaTopics = topics.length - prev.topics;
+  const sentimentLabel = avgSentimentRaw > 0 ? "Positive" : (avgSentimentRaw < 0 ? "Negative" : "Neutral");
 
   const handleRefresh = () => {
     refetch();
@@ -100,28 +110,32 @@ export default function Dashboard() {
             title="Total Tweets"
             value={totalTweets}
             icon={MessageSquare}
-            trend="+12%"
+            trend={`${deltaTweets > 0 ? '+' : ''}${deltaTweets}`}
+            trendUp={deltaTweets > 0}
             color="indigo"
           />
           <StatsCard
             title="Avg Sentiment"
             value={avgSentiment}
             icon={Heart}
-            trend={avgSentiment > 0 ? "Positive" : "Negative"}
+            trend={sentimentLabel}
+            trendUp={avgSentimentRaw > 0}
             color="rose"
           />
           <StatsCard
             title="Active Trends"
             value={topics.length}
             icon={Hash}
-            trend="+5"
+            trend={`${deltaTopics > 0 ? '+' : ''}${deltaTopics}`}
+            trendUp={deltaTopics > 0}
             color="emerald"
           />
           <StatsCard
             title="Rising Topics"
             value={risingTopics}
             icon={TrendingUp}
-            trend="Hot"
+            trend={`${risingTopics} rising`}
+            trendUp={risingTopics > 0}
             color="amber"
           />
         </motion.div>

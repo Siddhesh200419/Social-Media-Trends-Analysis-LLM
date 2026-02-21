@@ -1,5 +1,6 @@
 import logging
 import uuid
+import hashlib
 from datetime import datetime
 from typing import List, Dict, Any, Optional
 
@@ -21,6 +22,9 @@ categorizer = Categorizer()
 def generate_id() -> str:
     """Generates a unique ID."""
     return str(uuid.uuid4())
+
+def topic_id_from_name(name: str) -> str:
+    return hashlib.md5(name.encode('utf-8')).hexdigest()
 
 def run_pipeline(limit: int = 100, query: str = "tech") -> Dict[str, Any]:
     """
@@ -82,7 +86,7 @@ def run_pipeline(limit: int = 100, query: str = "tech") -> Dict[str, Any]:
     topics_map = {} # trend_name -> topic_data
     for trend_name, trend_score in trends:
         topics_map[trend_name] = {
-            "id": generate_id(),
+            "id": topic_id_from_name(trend_name),
             "name": trend_name,
             "category_id": None, # To be assigned
             "post_ids": [],
@@ -204,7 +208,9 @@ def run_pipeline(limit: int = 100, query: str = "tech") -> Dict[str, Any]:
             "text": p["original_text"],
             "sentiment_score": p["sentiment_score"],
             "posted_at": p["created_at"],
-            "engagement_score": p["engagement_score"]
+            "engagement_score": p["engagement_score"],
+            "likes": p["likes"],
+            "reposts": p["reposts"]
         })
     
     logger.info("Pipeline execution completed.")
