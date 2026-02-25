@@ -78,8 +78,8 @@ def run_pipeline(limit: int = 100, query: str = "tech") -> Dict[str, Any]:
         for p in processed_posts
     ]
     
-    # Get top 20 trends
-    trends = detect_trends(posts_for_detection, top_n=20)
+    # Get top 20 trends (exclude the query term to avoid trivial topics)
+    trends = detect_trends(posts_for_detection, top_n=20, exclude={query.lower()})
     logger.info(f"Detected {len(trends)} trends.")
     
     # Create Topic objects

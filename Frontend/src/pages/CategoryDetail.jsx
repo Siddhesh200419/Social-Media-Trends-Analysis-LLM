@@ -9,6 +9,7 @@ import { fetchPipelineData } from "@/api/pipeline";
 
 import TopicCard from "@/components/dashboard/TopicCard";
 import SentimentChart from "@/components/charts/SentimentChart";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const iconMap = {
   Cpu: Cpu,
@@ -51,8 +52,15 @@ export default function CategoryDetail() {
   
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 flex items-center justify-center">
-        <div className="animate-pulse text-slate-400">Loading...</div>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <Skeleton className="h-12 w-64 mb-8 rounded-xl" />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1,2,3,4,5,6].map(n => (
+              <Skeleton key={n} className="h-48 rounded-xl" />
+            ))}
+          </div>
+        </div>
       </div>
     );
   }
@@ -62,7 +70,7 @@ export default function CategoryDetail() {
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 flex items-center justify-center">
         <div className="text-center">
           <p className="text-slate-500 mb-4">Category not found</p>
-          <Link to={createPageUrl("Dashboard")}>
+          <Link to={createPageUrl("Dashboard") + `?query=${encodeURIComponent(selectedQuery)}`}>
             <Button>Back to Dashboard</Button>
           </Link>
         </div>
@@ -79,7 +87,7 @@ export default function CategoryDetail() {
           animate={{ opacity: 1, x: 0 }}
           className="mb-6"
         >
-          <Link to={createPageUrl("Dashboard")}>
+          <Link to={createPageUrl("Dashboard") + `?query=${encodeURIComponent(selectedQuery)}`}>
             <Button variant="ghost" className="gap-2 text-slate-600">
               <ArrowLeft className="w-4 h-4" />
               Back to Dashboard

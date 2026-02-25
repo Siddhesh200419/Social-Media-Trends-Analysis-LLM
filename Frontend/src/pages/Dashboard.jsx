@@ -11,9 +11,12 @@ import { fetchPipelineData } from "@/api/pipeline";
 import StatsCard from "@/components/dashboard/StatsCard";
 import CategoryCard from "@/components/dashboard/CategoryCard";
 import TopicCard from "@/components/dashboard/TopicCard";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Dashboard() {
-  const [selectedQuery, setSelectedQuery] = useState('news');
+  const params = new URLSearchParams(window.location.search);
+  const initialQuery = params.get('query') || 'news';
+  const [selectedQuery, setSelectedQuery] = useState(initialQuery);
 
   const { data, isLoading, refetch } = useQuery({
     queryKey: ['pipeline', selectedQuery],
@@ -81,7 +84,7 @@ export default function Dashboard() {
                 </Button>
               ))}
             </div>
-            <Link to={createPageUrl("Search")}>
+            <Link to={createPageUrl("Search") + `?query=${encodeURIComponent(selectedQuery)}`}>
               <Input
                 placeholder="Search trends..."
                 className="w-64 bg-white border-slate-200 focus:border-indigo-500 cursor-pointer"
@@ -152,7 +155,7 @@ export default function Dashboard() {
           {loadingCategories ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[1, 2, 3].map((n) => (
-                <div key={n} className="h-48 bg-slate-100 rounded-xl animate-pulse" />
+                <Skeleton key={n} className="h-48 rounded-xl" />
               ))}
             </div>
           ) : (
@@ -176,7 +179,7 @@ export default function Dashboard() {
           {loadingTopics ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {[1, 2, 3, 4].map((n) => (
-                <div key={n} className="h-40 bg-slate-100 rounded-xl animate-pulse" />
+                <Skeleton key={n} className="h-40 rounded-xl" />
               ))}
             </div>
           ) : (

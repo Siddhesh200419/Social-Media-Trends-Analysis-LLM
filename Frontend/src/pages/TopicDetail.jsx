@@ -13,6 +13,7 @@ import SentimentChart from "@/components/charts/SentimentChart";
 import EngagementChart from "@/components/charts/EngagementChart";
 
 import { fetchPipelineData } from "@/api/pipeline";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function TopicDetail() {
   const queryClient = useQueryClient();
@@ -82,10 +83,15 @@ export default function TopicDetail() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-slate-400">Loading topic...</p>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <Skeleton className="h-10 w-48 mb-6 rounded-xl" />
+          <Skeleton className="h-32 w-full mb-8 rounded-2xl" />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {[1,2,3,4].map(n => (
+              <Skeleton key={n} className="h-40 rounded-xl" />
+            ))}
+          </div>
         </div>
       </div>
     );
@@ -115,7 +121,7 @@ export default function TopicDetail() {
           animate={{ opacity: 1, x: 0 }}
           className="mb-6"
         >
-          <Link to={createPageUrl("Dashboard")}>
+          <Link to={createPageUrl("Dashboard") + `?query=${encodeURIComponent(selectedQuery)}`}>
             <Button variant="ghost" className="text-slate-600 hover:text-slate-900">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Dashboard
@@ -150,7 +156,7 @@ export default function TopicDetail() {
               <div className="flex items-center gap-6 mt-6">
                 <div className="flex items-center gap-2 text-slate-500">
                   <Clock className="w-4 h-4" />
-                  <span>Relevance: 24h</span>
+                  <span>Relevance: {topic.trend_duration}</span>
                 </div>
                 <div className="flex items-center gap-2 text-slate-500">
                   <TrendingUp className="w-4 h-4" />

@@ -9,7 +9,7 @@ const CATEGORY_META = {
 };
 
 export const fetchPipelineData = async (query = "news") => {
-  const response = await fetch(`/pipeline/run?limit=300&query=${encodeURIComponent(query)}`);
+  const response = await fetch(`/pipeline/run?limit=50&query=${encodeURIComponent(query)}`);
   if (!response.ok) {
     throw new Error('Failed to fetch pipeline data');
   }
@@ -58,13 +58,26 @@ export const fetchPipelineData = async (query = "news") => {
     }
 
     const relevance = Math.round((topic.engagement_score / maxEngagement) * 100);
+
+    const times = topicPosts
+      .map(p => p.posted_at ? new Date(p.posted_at).getTime() : null)
+      .filter((t) => typeof t === 'number');
+    let trendDuration = "24h";
+    if (times.length > 0) {
+      const minT = Math.min(...times);
+      const maxT = Math.max(...times);
+      const diffMs = Math.max(0, maxT - minT);
+      const hrs = Math.round(diffMs / 3600000);
+      trendDuration = hrs < 1 ? "<1h" : (hrs < 48 ? `${hrs}h` : `${Math.round(hrs/24)}d`);
+    }
+
     return {
       ...topic,
       total_tweets: topic.post_count,
       total_likes: totalLikes,
       total_retweets: totalRetweets,
       total_replies: 0,
-      trend_duration: "24h",
+      trend_duration: trendDuration,
       is_rising: topic.engagement_score > 5,
       description: `Viral topic in ${catName}`,
       relevance_score: relevance,

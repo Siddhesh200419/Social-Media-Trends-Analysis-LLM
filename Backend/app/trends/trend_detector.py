@@ -14,6 +14,13 @@ STOPWORDS = EN_STOP.union({
     "can","could","should","would","may","might","must","do","does","did","doing","will","shall","not","its","all","just"
 })
 
+NOISE_WORDS = {
+    "come","back","like","want","think","know","say","make","take","give","work","need","go","see",
+    "good","bad","really","very","today","tomorrow","yesterday","people","person","time","year","day","week",
+    "man","woman","guys","stuff","thing","things","news","politics","sport","business",
+    "dont","cant","doesnt","didnt","wont","shouldnt","couldnt","aint","im","youre","hes","shes","theyre","weve","ive"
+}
+
 def calculate_engagement(likes: int, reposts: int) -> int:
     """
     Calculates engagement score based on the project rule:
@@ -26,7 +33,7 @@ def extract_keywords(text):
     return [w for w in words if w not in STOPWORDS and len(w) >= 4]
 
 
-def detect_trends(posts, top_n=10):
+def detect_trends(posts, top_n=10, exclude=None):
     hashtag_counter = Counter()
     keyword_counter = Counter()
     engagement_counter = Counter()
@@ -40,7 +47,7 @@ def detect_trends(posts, top_n=10):
         # Hashtags
         hashtags = re.findall(r"#(\w+)", text.lower())
         for tag in hashtags:
-            hashtag_counter[tag] += 1
+            hashtag_counter[tag] += 2
             engagement_counter[tag] += engagement
 
         # Keywords
@@ -51,12 +58,18 @@ def detect_trends(posts, top_n=10):
 
     trends = []
     combined = hashtag_counter + keyword_counter
+    exclude = exclude or set()                      # ← fix: indented into function
+    hashtag_items = set(hashtag_counter.keys())     # ← fix: indented into function
 
-    for item, freq in combined.items():
+    for item, freq in combined.items():             # ← fix: indented into function
+        if item in exclude or item in NOISE_WORDS:
+            continue
+        if item not in hashtag_items and freq < 3:
+            continue
         if freq < 2:
             continue
-        score = freq + (engagement_counter[item] / 10)
+        score = freq + (engagement_counter[item] / 10) + (2 if item in hashtag_items else 0)
         trends.append((item, round(score, 2)))
 
-    trends.sort(key=lambda x: x[1], reverse=True)
-    return trends[:top_n]
+    trends.sort(key=lambda x: ((x[0] in hashtag_items), x[1]), reverse=True)  # ← fix: indented into function
+    return trends[:top_n]                           # ← fix: indented into function

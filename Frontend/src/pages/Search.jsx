@@ -12,6 +12,7 @@ import { fetchPipelineData } from "@/api/pipeline";
 
 import TopicCard from "@/components/dashboard/TopicCard";
 import CategoryCard from "@/components/dashboard/CategoryCard";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Search() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -77,7 +78,7 @@ export default function Search() {
           animate={{ opacity: 1, x: 0 }}
           className="mb-6"
         >
-          <Link to={createPageUrl("Dashboard")}>
+          <Link to={createPageUrl("Dashboard") + `?query=${encodeURIComponent(selectedQuery)}`}>
             <Button variant="ghost" className="text-slate-600 hover:text-slate-900">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Dashboard
@@ -191,7 +192,7 @@ export default function Search() {
           {isLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[1, 2, 3, 4, 5, 6].map((i) => (
-                <div key={i} className="h-64 bg-slate-100 rounded-xl animate-pulse" />
+                <Skeleton key={i} className="h-64 rounded-xl" />
               ))}
             </div>
           ) : filteredTopics.length === 0 ? (
@@ -204,7 +205,7 @@ export default function Search() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <AnimatePresence>
                 {filteredTopics.map((topic, index) => (
-                  <TopicCard key={topic.id} topic={topic} index={index} />
+                  <TopicCard key={topic.id} topic={topic} index={index} query={selectedQuery} />
                 ))}
               </AnimatePresence>
             </div>
